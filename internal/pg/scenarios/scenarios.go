@@ -30,6 +30,11 @@ var Scenarios = []Scenario{
 		Name: "Update deleted.",
 		Func: updateDeleted,
 	},
+	{
+		ID:   3,
+		Name: "Update deleted. Waiting for the transaction to complete.",
+		Func: updateDeletedWaitingForTxComplete,
+	},
 }
 
 var ErrScenarioNotFound = errors.New("scenario with this id not found")
