@@ -4,11 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-
 	"gopgtx/internal/pg"
 )
 
-func testReadCommitted(ctx context.Context, db *sql.DB, isolationLevel sql.IsolationLevel) error {
+func updateDeleted(ctx context.Context, db *sql.DB, isolationLevel sql.IsolationLevel) error {
 	tx1, err := db.BeginTx(ctx, &sql.TxOptions{Isolation: isolationLevel})
 	if err != nil {
 		return fmt.Errorf("failed to open tx1: %w", err)
@@ -23,12 +22,16 @@ func testReadCommitted(ctx context.Context, db *sql.DB, isolationLevel sql.Isola
 		return fmt.Errorf("failed to open tx2: %w", err)
 	}
 
-	if err := pg.UpdateAccounts(ctx, tx2); err != nil {
-		return fmt.Errorf("failed to update accounts: %w", err)
+	if err := pg.DeleteAccount(ctx, tx2); err != nil {
+		return fmt.Errorf("failed to delete an account: %w", err)
 	}
 
-	if err := tx2.Commit(); err != nil {
-		return fmt.Errorf("failed to commit tx2: %w", err)
+	if err := tx2.Rollback(); err != nil {
+		return fmt.Errorf("failed to roll back tx2: %w", err)
+	}
+
+	if err := pg.UpdateAccount(ctx, tx1); err != nil {
+		return fmt.Errorf("failed to update an account: %w", err)
 	}
 
 	if err := pg.PrintAccounts(ctx, tx1); err != nil {

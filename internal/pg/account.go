@@ -31,8 +31,14 @@ func PrintAccounts(ctx context.Context, tx *sql.Tx) error {
 	return nil
 }
 
-func UpdateAccounts(ctx context.Context, tx *sql.Tx) error {
+func UpdateAccount(ctx context.Context, tx *sql.Tx) error {
 	_, err := tx.Exec(`UPDATE accounts SET balance = 51.0 WHERE balance < 50.0;`)
+
+	return err
+}
+
+func DeleteAccount(ctx context.Context, tx *sql.Tx) error {
+	_, err := tx.Exec(`DELETE FROM accounts WHERE balance < 50.0;`)
 
 	return err
 }

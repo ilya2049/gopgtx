@@ -22,8 +22,13 @@ func (s Scenario) String() string {
 var Scenarios = []Scenario{
 	{
 		ID:   1,
-		Name: "Read committed",
-		Func: testReadCommitted,
+		Name: "Select committed.",
+		Func: selectCommitted,
+	},
+	{
+		ID:   2,
+		Name: "Update deleted.",
+		Func: updateDeleted,
 	},
 }
 
