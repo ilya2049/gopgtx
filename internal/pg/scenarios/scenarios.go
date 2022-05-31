@@ -22,7 +22,7 @@ var Scenarios = []Scenario{
 	{
 		ID:   1,
 		Name: "Select committed.",
-		Func: selectCommitted,
+		Func: selectUpdated,
 	},
 	{
 		ID:   2,

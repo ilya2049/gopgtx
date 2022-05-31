@@ -8,7 +8,7 @@ import (
 	"gopgtx/internal/pg"
 )
 
-func selectCommitted(db *sql.DB, isolationLevel sql.IsolationLevel) error {
+func selectUpdated(db *sql.DB, isolationLevel sql.IsolationLevel) error {
 	tx1, err := db.BeginTx(context.Background(), &sql.TxOptions{Isolation: isolationLevel})
 	if err != nil {
 		return fmt.Errorf("failed to open tx1: %w", err)
