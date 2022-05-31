@@ -1,15 +1,14 @@
 package pg
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 
 	"gopgtx/internal/models"
 )
 
-func PrintAccounts(ctx context.Context, tx *sql.Tx, query string) error {
-	rows, err := tx.QueryContext(ctx, query)
+func PrintAccounts(tx *sql.Tx, query string) error {
+	rows, err := tx.Query(query)
 	if err != nil {
 		return err
 	}
@@ -31,13 +30,13 @@ func PrintAccounts(ctx context.Context, tx *sql.Tx, query string) error {
 	return nil
 }
 
-func UpdateAccount(ctx context.Context, tx *sql.Tx, query string) error {
+func UpdateAccount(tx *sql.Tx, query string) error {
 	_, err := tx.Exec(query)
 
 	return err
 }
 
-func DeleteAccount(ctx context.Context, tx *sql.Tx, query string) error {
+func DeleteAccount(tx *sql.Tx, query string) error {
 	_, err := tx.Exec(query)
 
 	return err

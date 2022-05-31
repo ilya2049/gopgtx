@@ -1,13 +1,12 @@
 package scenarios
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"fmt"
 )
 
-type ScenarioFunc = func(context.Context, *sql.DB, sql.IsolationLevel) error
+type ScenarioFunc = func(*sql.DB, sql.IsolationLevel) error
 
 type Scenario struct {
 	ID   int

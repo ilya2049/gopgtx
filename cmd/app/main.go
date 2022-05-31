@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"log"
 
 	"gopgtx/internal/cmdline"
@@ -41,9 +40,7 @@ func main() {
 
 	defer closeDB()
 
-	ctx := context.Background()
-
-	if err := scenario.Func(ctx, db, isolationLevel); err != nil {
+	if err := scenario.Func(db, isolationLevel); err != nil {
 		log.Println("scenario failed: " + err.Error())
 
 		return

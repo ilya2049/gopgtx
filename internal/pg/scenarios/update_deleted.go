@@ -8,22 +8,22 @@ import (
 	"gopgtx/internal/pg"
 )
 
-func updateDeleted(ctx context.Context, db *sql.DB, isolationLevel sql.IsolationLevel) error {
-	tx1, err := db.BeginTx(ctx, &sql.TxOptions{Isolation: isolationLevel})
+func updateDeleted(db *sql.DB, isolationLevel sql.IsolationLevel) error {
+	tx1, err := db.BeginTx(context.Background(), &sql.TxOptions{Isolation: isolationLevel})
 	if err != nil {
 		return fmt.Errorf("failed to open tx1: %w", err)
 	}
 
-	if err := pg.PrintAccounts(ctx, tx1, `SELECT * FROM accounts WHERE balance > 50;`); err != nil {
+	if err := pg.PrintAccounts(tx1, `SELECT * FROM accounts WHERE balance > 50;`); err != nil {
 		return fmt.Errorf("failed to print accounts: %w", err)
 	}
 
-	tx2, err := db.BeginTx(ctx, &sql.TxOptions{Isolation: isolationLevel})
+	tx2, err := db.BeginTx(context.Background(), &sql.TxOptions{Isolation: isolationLevel})
 	if err != nil {
 		return fmt.Errorf("failed to open tx2: %w", err)
 	}
 
-	if err := pg.DeleteAccount(ctx, tx2, `DELETE FROM accounts WHERE balance < 50.0;`); err != nil {
+	if err := pg.DeleteAccount(tx2, `DELETE FROM accounts WHERE balance < 50.0;`); err != nil {
 		return fmt.Errorf("failed to delete an account: %w", err)
 	}
 
@@ -31,11 +31,11 @@ func updateDeleted(ctx context.Context, db *sql.DB, isolationLevel sql.Isolation
 		return fmt.Errorf("failed to roll back tx2: %w", err)
 	}
 
-	if err := pg.UpdateAccount(ctx, tx1, `UPDATE accounts SET balance = 51.0 WHERE balance < 50.0;`); err != nil {
+	if err := pg.UpdateAccount(tx1, `UPDATE accounts SET balance = 51.0 WHERE balance < 50.0;`); err != nil {
 		return fmt.Errorf("failed to update an account: %w", err)
 	}
 
-	if err := pg.PrintAccounts(ctx, tx1, `SELECT * FROM accounts WHERE balance > 50;`); err != nil {
+	if err := pg.PrintAccounts(tx1, `SELECT * FROM accounts WHERE balance > 50;`); err != nil {
 		return fmt.Errorf("failed to print accounts: %w", err)
 	}
 
@@ -46,26 +46,26 @@ func updateDeleted(ctx context.Context, db *sql.DB, isolationLevel sql.Isolation
 	return nil
 }
 
-func updateDeletedWaitingForTxComplete(ctx context.Context, db *sql.DB, isolationLevel sql.IsolationLevel) error {
-	tx1, err := db.BeginTx(ctx, &sql.TxOptions{Isolation: isolationLevel})
+func updateDeletedWaitingForTxComplete(db *sql.DB, isolationLevel sql.IsolationLevel) error {
+	tx1, err := db.BeginTx(context.Background(), &sql.TxOptions{Isolation: isolationLevel})
 	if err != nil {
 		return fmt.Errorf("failed to open tx1: %w", err)
 	}
 
-	if err := pg.PrintAccounts(ctx, tx1, `SELECT * FROM accounts WHERE balance > 50;`); err != nil {
+	if err := pg.PrintAccounts(tx1, `SELECT * FROM accounts WHERE balance > 50;`); err != nil {
 		return fmt.Errorf("failed to print accounts: %w", err)
 	}
 
-	tx2, err := db.BeginTx(ctx, &sql.TxOptions{Isolation: isolationLevel})
+	tx2, err := db.BeginTx(context.Background(), &sql.TxOptions{Isolation: isolationLevel})
 	if err != nil {
 		return fmt.Errorf("failed to open tx2: %w", err)
 	}
 
-	if err := pg.DeleteAccount(ctx, tx2, `DELETE FROM accounts WHERE balance < 50.0;`); err != nil {
+	if err := pg.DeleteAccount(tx2, `DELETE FROM accounts WHERE balance < 50.0;`); err != nil {
 		return fmt.Errorf("failed to delete an account: %w", err)
 	}
 
-	if err := pg.UpdateAccount(ctx, tx1, `UPDATE accounts SET balance = 51.0 WHERE balance < 50.0;`); err != nil {
+	if err := pg.UpdateAccount(tx1, `UPDATE accounts SET balance = 51.0 WHERE balance < 50.0;`); err != nil {
 		return fmt.Errorf("failed to update an account: %w", err)
 	}
 
