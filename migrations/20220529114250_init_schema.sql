@@ -2,16 +2,16 @@
 -- +goose StatementBegin
 CREATE TABLE accounts
 (
-  id INTEGER NOT NULL,
+  id SERIAL NOT NULL,
   balance NUMERIC NOT NULL,
   PRIMARY KEY (id)
 );
 
-INSERT INTO accounts(id, balance)
+INSERT INTO accounts(balance)
 VALUES 
-(1, 100.0),
-(2, 35.0),
-(3, 90.0);
+(100.0),
+(35.0),
+(90.0);
 -- +goose StatementEnd
 
 -- +goose Down

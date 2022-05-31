@@ -30,6 +30,12 @@ func PrintAccounts(tx *sql.Tx, query string) error {
 	return nil
 }
 
+func InsertAccount(tx *sql.Tx, account models.Account) error {
+	_, err := tx.Exec(`INSERT INTO accounts (balance) VALUES ($1)`, account.Balance)
+
+	return err
+}
+
 func UpdateAccount(tx *sql.Tx, query string) error {
 	_, err := tx.Exec(query)
 

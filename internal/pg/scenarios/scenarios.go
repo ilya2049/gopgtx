@@ -34,6 +34,16 @@ var Scenarios = []Scenario{
 		Name: "Update deleted. Waiting for the transaction to complete.",
 		Func: updateDeletedWaitingForTxComplete,
 	},
+	{
+		ID:   4,
+		Name: "Select with limit. Waiting for the transaction to complete.",
+		Func: selectLimitWaitingForTxComplete,
+	},
+	{
+		ID:   5,
+		Name: "Select limit with inserting.",
+		Func: selectLimitWithInserting,
+	},
 }
 
 var ErrScenarioNotFound = errors.New("scenario with this id not found")
