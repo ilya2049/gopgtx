@@ -14,7 +14,7 @@ func selectCommitted(ctx context.Context, db *sql.DB, isolationLevel sql.Isolati
 		return fmt.Errorf("failed to open tx1: %w", err)
 	}
 
-	if err := pg.PrintAccounts(ctx, tx1); err != nil {
+	if err := pg.PrintAccounts(ctx, tx1, `SELECT * FROM accounts WHERE balance > 50;`); err != nil {
 		return fmt.Errorf("failed to print accounts: %w", err)
 	}
 
@@ -23,7 +23,7 @@ func selectCommitted(ctx context.Context, db *sql.DB, isolationLevel sql.Isolati
 		return fmt.Errorf("failed to open tx2: %w", err)
 	}
 
-	if err := pg.UpdateAccount(ctx, tx2); err != nil {
+	if err := pg.UpdateAccount(ctx, tx2, `UPDATE accounts SET balance = 51.0 WHERE balance < 50.0;`); err != nil {
 		return fmt.Errorf("failed to update an account: %w", err)
 	}
 
@@ -31,7 +31,7 @@ func selectCommitted(ctx context.Context, db *sql.DB, isolationLevel sql.Isolati
 		return fmt.Errorf("failed to commit tx2: %w", err)
 	}
 
-	if err := pg.PrintAccounts(ctx, tx1); err != nil {
+	if err := pg.PrintAccounts(ctx, tx1, `SELECT * FROM accounts WHERE balance > 50;`); err != nil {
 		return fmt.Errorf("failed to print accounts: %w", err)
 	}
 

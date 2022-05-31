@@ -8,8 +8,8 @@ import (
 	"gopgtx/internal/models"
 )
 
-func PrintAccounts(ctx context.Context, tx *sql.Tx) error {
-	rows, err := tx.QueryContext(ctx, `SELECT * FROM accounts WHERE balance > 50;`)
+func PrintAccounts(ctx context.Context, tx *sql.Tx, query string) error {
+	rows, err := tx.QueryContext(ctx, query)
 	if err != nil {
 		return err
 	}
@@ -31,14 +31,14 @@ func PrintAccounts(ctx context.Context, tx *sql.Tx) error {
 	return nil
 }
 
-func UpdateAccount(ctx context.Context, tx *sql.Tx) error {
-	_, err := tx.Exec(`UPDATE accounts SET balance = 51.0 WHERE balance < 50.0;`)
+func UpdateAccount(ctx context.Context, tx *sql.Tx, query string) error {
+	_, err := tx.Exec(query)
 
 	return err
 }
 
-func DeleteAccount(ctx context.Context, tx *sql.Tx) error {
-	_, err := tx.Exec(`DELETE FROM accounts WHERE balance < 50.0;`)
+func DeleteAccount(ctx context.Context, tx *sql.Tx, query string) error {
+	_, err := tx.Exec(query)
 
 	return err
 }
